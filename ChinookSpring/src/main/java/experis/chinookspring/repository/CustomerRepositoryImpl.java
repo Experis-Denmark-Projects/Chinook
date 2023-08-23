@@ -1,111 +1,33 @@
-package experis.chinookspring.Database;
+package experis.chinookspring.repository;
 
 import experis.chinookspring.Models.Customer;
 import experis.chinookspring.Models.CustomerCountry;
-import experis.chinookspring.Models.CustomerGenre;
 import experis.chinookspring.Models.CustomerSpender;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class ChinookDAO {
+@Repository
+public class CustomerRepositoryImpl implements CustomerRepository{
 
-    @Value("${spring.datasource.url}")
-    private String url;
+    private final String url;
+    private final String username;
+    private final String password;
 
-    @Value("${spring.datasource.username}")
-    private String username;
-
-    @Value("${spring.datasource.password}")
-    private String password;
-
-
-    public ChinookDAO(String url, String username, String password) {
+    public CustomerRepositoryImpl(
+            @Value("${spring.datasource.url}")  String url,
+            @Value("${spring.datasource.username}") String username,
+            @Value("${spring.datasource.password}") String password) {
         this.url = url;
         this.username = username;
         this.password = password;
     }
-    public ChinookDAO() {
 
-    }
-
-    public void test() {
-        try(Connection conn = DriverManager.getConnection(url, username, password)) {
-            System.out.println("Connected to Postgres...");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
-    //SELECT c.customer_id, g.name, COUNT(*) AS count FROM customer c JOIN invoice i ON i.customer_id = c.customer_id JOIN invoice_line il ON il.invoice_id = i.invoice_id JOIN track t ON t.track_id = il.track_id JOIN genre g ON g.genre_id = t.genre_id GROUP BY c.customer_id, g.name ORDER BY count DESC LIMIT 1
-
-    public void mostPopularGenre() {
-        String sql = " SELECT customer_id, genre_id FROM GenreCount where rank=1 WITH GenreCount AS (SELECT c.customer_id, genre_name, COUNT(*)  ) ";
-
-
-
-
-        try (Connection conn = DriverManager.getConnection(url,username,password)){
-            PreparedStatement statement = conn.prepareStatement(sql);
-            ResultSet result = statement.executeQuery();
-            CustomerGenre customerGenre = null;
-            while (result.next()){
-                customerGenre = new CustomerGenre(result.getInt("id"), result.getString("genre"), result.getInt("count"));
-
-            }
-            System.out.println("Genre: "+ customerGenre.genre() +" "+"Count: "+customerGenre.count());
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public void highestSpender(){
-        String sql = "SELECT  c.first_name, c.last_name, SUM(i.total) AS amount FROM customer c INNER JOIN invoice i ON i.customer_id = c.customer_id GROUP BY c.customer_id ORDER BY amount DESC LIMIT 1";
-        try (Connection conn = DriverManager.getConnection(url,username,password)){
-            PreparedStatement statement = conn.prepareStatement(sql);
-            ResultSet result = statement.executeQuery();
-            CustomerSpender customerSpender = null;
-            while (result.next()){
-                customerSpender = new CustomerSpender(result.getString("first_name"), result.getString("last_name"),result.getDouble("amount"));
-
-            }
-            System.out.println("First Name: "+ customerSpender.name() +" "+"Last Name: "+customerSpender.lastName() + " amount: " + customerSpender.amount());
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-    }
-
-
-
-
-    public void updateFirstNameCustomer(int id, String value) {
-        updateCustomer(id,"first_name",value);
-    }
-    public void updateLastNameCustomer(int id, String value) {
-        updateCustomer(id,"last_name",value);
-    }
-    public void updateCountryCustomer(int id, String value) {
-        updateCustomer(id,"country",value);
-    }
-    public void updatePostalCodeCustomer(int id, String value) {
-        updateCustomer(id,"postal_code",value);
-    }
-
-    public void updatePhoneCustomer(int id, String value) {
-        updateCustomer(id,"phone",value);
-    }
-    public void updateEmailCustomer(int id, String value) {
-        updateCustomer(id,"email",value);
-    }
-
-
-
-    public List<Customer> getCustomer() {
+    @Override
+    public List<Customer> findAll() {
         List<Customer> customersList = new ArrayList<>();
 
         String sql = "select customer_id, first_name, last_name, country, postal_code, phone, email FROM customer";
@@ -131,17 +53,18 @@ public class ChinookDAO {
         return customersList;
     }
 
-    public List<Customer> getCustomer(int id) {
-        List<Customer> customersList = new ArrayList<>();
+    @Override
+    public Customer findById(Integer id) {
+        Customer customer = null;
 
-        String sql = "select customer_id, first_name, last_name, country, postal_code, phone, email FROM customer WHERE customer_id="+id;
+        String sql = String.format("select customer_id, first_name, last_name, country, postal_code, phone, email FROM customer WHERE customer_id=%s", id);
 
         try(Connection conn = DriverManager.getConnection(url,username,password)){
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet result = statement.executeQuery();
 
             while(result.next()) {
-                Customer customer = new Customer(result.getInt("customer_id"),
+                customer = new Customer(result.getInt("customer_id"),
                         result.getString("first_name"),
                         result.getString("last_name"),
                         result.getString("country"),
@@ -149,17 +72,16 @@ public class ChinookDAO {
                         result.getString("phone"),
                         result.getString("email")
                 );
-                customersList.add(customer);
             }
         }catch (SQLException e) {
             System.out.println("FUCKING ERRORS MAN: "+e.getMessage());
         }
-        return customersList;
-
+        return customer;
     }
 
-    public List<Customer> getCustomer(String name) {
-        List<Customer> customersList = new ArrayList<>();
+    @Override
+    public Customer findByName(String name) {
+        Customer customer = null;
 
         String sql = "select customer_id, first_name, last_name, country, postal_code, phone, email FROM customer WHERE first_name LIKE"+"'"+name+"'";
         try(Connection conn = DriverManager.getConnection(url,username,password)){
@@ -167,7 +89,7 @@ public class ChinookDAO {
             ResultSet result = statement.executeQuery();
 
             while(result.next()) {
-                Customer customer = new Customer(result.getInt("customer_id"),
+                customer = new Customer(result.getInt("customer_id"),
                         result.getString("first_name"),
                         result.getString("last_name"),
                         result.getString("country"),
@@ -175,16 +97,17 @@ public class ChinookDAO {
                         result.getString("phone"),
                         result.getString("email")
                 );
-                customersList.add(customer);
+
             }
         }catch (SQLException e) {
             System.out.println("FUCKING ERRORS MAN: "+e.getMessage());
         }
-        return customersList;
-
+        return customer;
     }
 
-    public List<Customer> getCustomerPage(int offset, int limit) {
+
+    @Override
+    public List<Customer> findPage(int offset, int limit) {
         List<Customer> customersList = new ArrayList<>();
         // select customer_id, first_name, last_name, country, postal_code, phone, email FROM customer LIMIT 10 OFFSET 2;
         String sql = "select customer_id, first_name, last_name, country, postal_code, phone, email FROM customer LIMIT "+limit+" OFFSET "+offset;
@@ -210,7 +133,8 @@ public class ChinookDAO {
 
     }
 
-    public int insertCustomer(Customer customer) {
+    @Override
+    public int insert(Customer customer) {
         String name=customer.first_name();
         String lastName=customer.last_name();
         String country =customer.country();
@@ -237,8 +161,11 @@ public class ChinookDAO {
         return result;
     }
 
-    private void updateCustomer(int id, String parameter ,String value){
-        String sql = "UPDATE customer SET "+parameter+"="+ "'" +value+"' WHERE customer_id="+id;
+
+
+    @Override
+    public void update(Integer id, String parameter, String value) {
+        String sql = String.format("UPDATE customer SET "+parameter+"="+ "'" +value+"' WHERE customer_id=");
         try (Connection conn = DriverManager.getConnection(url,username,password)){
             PreparedStatement statement = conn.prepareStatement(sql);
             //statement.setString(1, value);
@@ -248,7 +175,10 @@ public class ChinookDAO {
         }
     }
 
-    public void countryWithMostCustomers(){
+
+
+    @Override
+    public void returnCountry() {
         String sql = "SELECT country, COUNT(*) AS num FROM customer GROUP BY country ORDER BY num DESC LIMIT 1";
         try (Connection conn = DriverManager.getConnection(url,username,password)){
             PreparedStatement statement = conn.prepareStatement(sql);
@@ -264,17 +194,25 @@ public class ChinookDAO {
         }
     }
 
-    public void displayCustomer(List<Customer> customersList) {
-        for (Customer customer: customersList) {
-            System.out.println(
-                    customer.customer_id() + " " +
-                    customer.first_name()+ " " +
-                    customer.last_name()+ " " +
-                    customer.country()+ " " +
-                    customer.postal_code()+ " " +
-                    customer.phone()+ " " +
-                            customer.email());
+    @Override
+    public void highestSpender() {
+        String sql = "SELECT  c.first_name, c.last_name, SUM(i.total) AS amount FROM customer c INNER JOIN invoice i ON i.customer_id = c.customer_id GROUP BY c.customer_id ORDER BY amount DESC LIMIT 1";
+        try (Connection conn = DriverManager.getConnection(url,username,password)){
+            PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet result = statement.executeQuery();
+            CustomerSpender customerSpender = null;
+            while (result.next()){
+                customerSpender = new CustomerSpender(result.getString("first_name"), result.getString("last_name"),result.getDouble("amount"));
+
+            }
+            System.out.println("First Name: "+ customerSpender.name() +" "+"Last Name: "+customerSpender.lastName() + " amount: " + customerSpender.amount());
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
         }
+    }
+
+    @Override
+    public void mostPopularGenre() {
 
     }
 }
