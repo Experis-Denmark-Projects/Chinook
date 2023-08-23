@@ -68,16 +68,11 @@ public class ChinookDAO {
         return result;
     }
     //SELECT c.customer_id, g.name, COUNT(*) AS count FROM customer c JOIN invoice i ON i.customer_id = c.customer_id JOIN invoice_line il ON il.invoice_id = i.invoice_id JOIN track t ON t.track_id = il.track_id JOIN genre g ON g.genre_id = t.genre_id GROUP BY c.customer_id, g.name ORDER BY count DESC LIMIT 1
-    //SELECT c.customer_id, i.genre_name, COUNT(*) AS count FROM customer c JOIN invoice i ON
+
     public void mostPopularGenre() {
         String sql = " SELECT customer_id, genre_id FROM GenreCount where rank=1 WITH GenreCount AS (SELECT c.customer_id, genre_name, COUNT(*)  ) ";
 
 
-// From customer c
-// join invoice i ON c.customer.id = i.customer_id
-// join invoice_line x ON i.invoice_id = x.invoice_id
-// join track t ON x.track_id = t.track_id
-// join genre p ON t.
 
 
         try (Connection conn = DriverManager.getConnection(url,username,password)){
