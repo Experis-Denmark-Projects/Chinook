@@ -257,12 +257,12 @@ public class CustomerRepositoryImpl implements CustomerRepository{
 
     }
 
-    /** Display Customers
+    /** Display list of Customers. Helper function
      * This method iterates through the customerList and prints all fields in a concatenated string on a single line.
      * @param customersList this is a list of Customer objects.
      * */
     @Override
-    public void displayCustomer(List<Customer> customersList) {
+    public void displayListOfCustomer(List<Customer> customersList) {
         for (Customer customer: customersList) {
             System.out.println(
                     customer.customer_id() + " " +
@@ -270,9 +270,29 @@ public class CustomerRepositoryImpl implements CustomerRepository{
                             customer.last_name()+ " " +
                             customer.country()+ " " +
                             customer.postal_code()+ " " +
+
                             customer.phone()+ " " +
                             customer.email());
         }
 
     }
+
+    /**
+     * Print a customer. Helper function
+     * @param customer This is the customer to be printed
+     */
+    @Override
+    public void displayCustomer(Customer customer) {
+            System.out.println(
+                    customer.customer_id() + " " +
+                            customer.first_name()+ " " +
+                            customer.last_name()+ " " +
+                            customer.country()+ " " +
+                            customer.postal_code()+ " " +
+
+                            customer.phone()+ " " +
+                            customer.email());
+        }
+
+
 }
