@@ -17,6 +17,11 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     private final String username;
     private final String password;
 
+    /**
+     * Constructor that takes the fields values for the database connections.
+     * The values are stored in application.properties and fetched using  spring boot @Value annotation
+     *
+     */
     public CustomerRepositoryImpl(
             @Value("${spring.datasource.url}")  String url,
             @Value("${spring.datasource.username}") String username,
@@ -26,6 +31,11 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         this.password = password;
     }
 
+    /**
+     * findAll makes a list og customers and fetches id, name, country, postal code, phone and emmail from all of them via the SQL statement.
+     * THen it uses prepared statements to avoid SQL injection.
+     * @return It returns a list of customers.
+     */
     @Override
     public List<Customer> findAll() {
         List<Customer> customersList = new ArrayList<>();
@@ -36,6 +46,9 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet result = statement.executeQuery();
 
+            /**
+             * Here the fetched values are added to a customer and continuously added to the customer list.
+             */
             while(result.next()) {
                 Customer customer = new Customer(result.getInt("customer_id"),
                         result.getString("first_name"),
@@ -53,6 +66,11 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return customersList;
     }
 
+    /**Find specific customer by id
+     * This method execute
+     * @param id this is the identifier used to find the customer.
+     * @return this method returns a Customer object if the id matches a customer_id in the Chinook database otherwise it returns null.
+     * */
     @Override
     public Customer findById(Integer id) {
         Customer customer = null;
@@ -79,6 +97,11 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return customer;
     }
 
+    /**
+     * This finds a specific customer by name.
+     * @param name  This is the name of the customer that needs to be found.
+     * @return a customer object if the name matches otherwise null.
+     */
     @Override
     public Customer findByName(String name) {
         Customer customer = null;
@@ -105,7 +128,12 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return customer;
     }
 
-
+    /**
+     * This finds all customer within a set start and end range.
+     * @param offset This is the starting range.
+     * @param limit This is the end range.
+     * @return a list of customer within the range.
+     */
     @Override
     public List<Customer> findPage(int offset, int limit) {
         List<Customer> customersList = new ArrayList<>();
@@ -133,6 +161,11 @@ public class CustomerRepositoryImpl implements CustomerRepository{
 
     }
 
+    /**
+     * Inserts a new customer into database
+      * @param customer Customer object that is is inserted
+     * @return 1 if a customer was added, otherwise 0.
+     */
     @Override
     public int insert(Customer customer) {
         String name=customer.first_name();
@@ -143,7 +176,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         String email = customer.email();
         // "+name+","+lastName+","+country+","+postalCode+","+phone+","+email+"
         String sql = "INSERT INTO customer (first_name, last_name, country, postal_code, phone, email) VALUES (?,?,?,?,?,?)";
-        int result =1;
+        int result =0;
         try (Connection conn = DriverManager.getConnection(url,username,password)){
             PreparedStatement statement = conn.prepareStatement(sql);
             //statement.setInt(1,id);
@@ -161,8 +194,12 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return result;
     }
 
-
-
+    /**
+     * Updates a customer on a specified parameter.
+     * @param id this is the identifier of the entry.
+     * @param parameter this is the name of the column to
+     * @param value this is the new value to replace the older value.
+     */
     @Override
     public void update(Integer id, String parameter, String value) {
         String sql = String.format("UPDATE customer SET "+parameter+"="+ "'" +value+"' WHERE customer_id=");
@@ -175,8 +212,9 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         }
     }
 
-
-
+    /**
+     * Returns the country with the most customers and prints the country and the count.
+     */
     @Override
     public void returnCountry() {
         String sql = "SELECT country, COUNT(*) AS num FROM customer GROUP BY country ORDER BY num DESC LIMIT 1";
@@ -194,6 +232,9 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         }
     }
 
+    /**
+     * Prints the customer by name that had the highest total on the invoice.
+     */
     @Override
     public void highestSpender() {
         String sql = "SELECT  c.first_name, c.last_name, SUM(i.total) AS amount FROM customer c INNER JOIN invoice i ON i.customer_id = c.customer_id GROUP BY c.customer_id ORDER BY amount DESC LIMIT 1";
@@ -213,6 +254,25 @@ public class CustomerRepositoryImpl implements CustomerRepository{
 
     @Override
     public void mostPopularGenre() {
+
+    }
+
+    /** Display Customers
+     * This method iterates through the customerList and prints all fields in a concatenated string on a single line.
+     * @param customersList this is a list of Customer objects.
+     * */
+    @Override
+    public void displayCustomer(List<Customer> customersList) {
+        for (Customer customer: customersList) {
+            System.out.println(
+                    customer.customer_id() + " " +
+                            customer.first_name()+ " " +
+                            customer.last_name()+ " " +
+                            customer.country()+ " " +
+                            customer.postal_code()+ " " +
+                            customer.phone()+ " " +
+                            customer.email());
+        }
 
     }
 }

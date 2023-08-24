@@ -1,21 +1,14 @@
 package experis.chinookspring;
 
-import experis.chinookspring.Database.ChinookDAO;
-import experis.chinookspring.Models.Customer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ChinookSpringApplication implements CommandLineRunner {
+public class ChinookSpringApplication  {
     public static void main(String[] args) {
         SpringApplication.run(ChinookSpringApplication.class, args);
     }
 
 
-    @Override
-    public void run(String... args) throws Exception {
 
-    }
 }
