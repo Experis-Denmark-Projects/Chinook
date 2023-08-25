@@ -1,6 +1,8 @@
+## Name
+Assignment 1
 Assignment 1 is found the folder called Assignment 1. It have the indidvidual files for each subassignment.
 
-# Chinook
+
 
 ## Name
 Assignment 2 - Chinook
@@ -32,10 +34,10 @@ To run the program follow the instructions below:
 1. Run the method the class called "ChinookSpringApplication" by right clicking the file.
 
 ## Authors
-Name: Sigurd S.
-Lasname: Andersen
+Name: Sigurd Schelde
+Andersen
 E-Mail: sigurdschelde@gmail.com
 
 Name: Alexander
-Lastname: Jonstrup
+ Jonstrup
 E-Mail: Alexander.Jonstrup@outlook.com
