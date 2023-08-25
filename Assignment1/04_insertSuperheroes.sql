@@ -1,3 +1,4 @@
+-- alters the superheroes table to remove the ass_id coloum. Added 4 superheroes. Alters the assistant table to include superhero id to associate specific assistants to superheroes
 ALTER TABLE Superheroes DROP COLUMN ass_id;
 
 INSERT INTO Superheroes VALUES (1, 'Batman', 'Bruce Wayne', 'Parents died');
