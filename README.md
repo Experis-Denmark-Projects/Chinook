@@ -1,11 +1,9 @@
-## Name
-Assignment 1
+## Assignment 1
 Assignment 1 is found the folder called Assignment 1. It have the indidvidual files for each subassignment.
 
 
 
-## Name
-Assignment 2 - Chinook
+## Assignment 2 - Chinook
 
 ## Description
 This project is a series of sql statements set forth by a wealthy media mogul. It is made in Spring boot using JDBC with a postgres database called chinook.
