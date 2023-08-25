@@ -1,3 +1,4 @@
+--inserts 3 assistants
 INSERT INTO Assistant VALUES (1, 'Robin');
 
 INSERT INTO Assistant VALUES (2, 'Lois Lane');
