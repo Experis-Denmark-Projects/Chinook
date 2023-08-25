@@ -1,4 +1,4 @@
-/* Creates a table called Superheroes with id as primary key and name, alias and origin columns with not null constraint. :*/
+/* Creates tables called Superheroes, Assistant and Power that all have id as a primary key and other table specific columns with value types and constraints. :*/
 CREATE TABLE Superheroes (
 	SH_ID SERIAL PRIMARY KEY,
 	SH_NAME VARCHAR(50) NOT NULL,
