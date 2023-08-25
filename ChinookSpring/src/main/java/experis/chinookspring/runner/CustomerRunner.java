@@ -13,6 +13,9 @@ public class CustomerRunner implements ApplicationRunner {
 
     private final CustomerRepository customerRepository;
 
+    /**
+     * Constructor with Autowired annotation to allow for dependency injection.
+     */
     @Autowired
     public CustomerRunner(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
