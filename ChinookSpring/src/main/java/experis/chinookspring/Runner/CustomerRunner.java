@@ -29,15 +29,15 @@ public class CustomerRunner implements ApplicationRunner {
         //1. Find and display all customers
         System.out.println("Requirement 1: ");
         System.out.println("=============================================");
-            customerRepository.displayListOfCustomer(customerRepository.findAll());
+            //customerRepository.displayListOfCustomer(customerRepository.findAll());
         System.out.println("=============================================");
         //2. Find and display a specific customer by id.
         System.out.println("Requirement 2: ");
-        customerRepository.displayCustomer(customerRepository.findById(1));
+            //customerRepository.displayCustomer(customerRepository.findById(1));
         System.out.println("=============================================");
         //3. Find and display a specific customer by name.
         System.out.println("Requirement 3: ");
-            customerRepository.displayCustomer(customerRepository.findByName("Kara"));
+            //customerRepository.displayCustomer(customerRepository.findByName("Kara"));
         System.out.println("=============================================");
         //4. Get customer page using limit and offset.
         System.out.println("Requirement 4: ");
@@ -61,7 +61,7 @@ public class CustomerRunner implements ApplicationRunner {
         System.out.println("=============================================");
         //9. Get the most popular music genre for a specific customer.
         System.out.println("Requirement 9: ");
-
+            customerRepository.mostPopularGenre(12);
         System.out.println("=============================================");
     }
 }

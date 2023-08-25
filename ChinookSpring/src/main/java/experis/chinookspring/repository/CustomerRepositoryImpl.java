@@ -2,6 +2,7 @@ package experis.chinookspring.repository;
 
 import experis.chinookspring.Models.Customer;
 import experis.chinookspring.Models.CustomerCountry;
+import experis.chinookspring.Models.CustomerGenre;
 import experis.chinookspring.Models.CustomerSpender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     /**
      * Constructor that takes the fields values for the database connections.
      * The values are stored in application.properties and fetched using  spring boot @Value annotation
-     *
+     * Then
      */
     public CustomerRepositoryImpl(
             @Value("${spring.datasource.url}")  String url,
@@ -253,7 +254,40 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     }
 
     @Override
-    public void mostPopularGenre() {
+    public void mostPopularGenre(int id) {
+        String sql = String.format("SELECT c.customer_id, g.name AS genre, COUNT(*) AS count \n" +
+                "FROM customer c\n" +
+                "JOIN invoice i ON i.customer_id = c.customer_id\n" +
+                "JOIN invoice_line il ON il.invoice_id = i.invoice_id\n" +
+                "JOIN track t ON t.track_id = il.track_id\n" +
+                "JOIN genre g ON g.genre_id = t.genre_id\n" +
+                "WHERE c.customer_id = %s\n" +
+                "GROUP BY c.customer_id, g.name\n" +
+                "HAVING COUNT(*) = (SELECT MAX(count) \n" +
+                "                   FROM (SELECT COUNT(*) AS count \n" +
+                "                         FROM customer c\n" +
+                "                         JOIN invoice i ON i.customer_id = c.customer_id\n" +
+                "                         JOIN invoice_line il ON il.invoice_id = i.invoice_id\n" +
+                "                         JOIN track t ON t.track_id = il.track_id\n" +
+                "                         JOIN genre g ON g.genre_id = t.genre_id\n" +
+                "                         WHERE c.customer_id = %s\n" +
+                "                         GROUP BY g.name) AS genre_counts);\n", id, id);
+        try (Connection conn = DriverManager.getConnection(url,username,password)){
+            PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet result = statement.executeQuery();
+            CustomerGenre customerGenre = null;
+            while (result.next()){
+                customerGenre = new CustomerGenre(
+                        result.getInt("customer_id"),
+                        result.getString("genre"),
+                        result.getInt("count"));
+                System.out.println("Id: "+ customerGenre.id() +" "+"Genre: "+customerGenre.genre() + " Count: " + customerGenre.count());
+            }
+
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+
 
     }
 

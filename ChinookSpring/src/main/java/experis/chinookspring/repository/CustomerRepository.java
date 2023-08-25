@@ -24,7 +24,7 @@ public interface CustomerRepository extends CRUDRepository<Customer, Integer, St
 
     void highestSpender();
 
-    void mostPopularGenre();
+    void mostPopularGenre(int id);
 
     void displayListOfCustomer(List<Customer> customersList);
     void displayCustomer(Customer customer);
