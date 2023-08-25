@@ -1,3 +1,5 @@
+-- added 4 powers to the table and assigns powers to different heroes based on their id
+
 INSERT INTO Power VALUES (1, 'Money', 'Has a lot of money');
 
 INSERT INTO Power VALUES (2, 'Super speed', 'Is very fast');
