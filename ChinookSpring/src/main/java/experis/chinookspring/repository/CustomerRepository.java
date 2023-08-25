@@ -1,6 +1,6 @@
 package experis.chinookspring.repository;
 
-import experis.chinookspring.Models.Customer;
+import experis.chinookspring.models.Customer;
 
 import java.util.List;
 

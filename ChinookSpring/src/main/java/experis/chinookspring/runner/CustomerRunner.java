@@ -1,14 +1,11 @@
-package experis.chinookspring.Runner;
+package experis.chinookspring.runner;
 
-import experis.chinookspring.Models.Customer;
+import experis.chinookspring.models.Customer;
 import experis.chinookspring.repository.CustomerRepository;
-import experis.chinookspring.repository.CustomerRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
 
 /***/
 @Component

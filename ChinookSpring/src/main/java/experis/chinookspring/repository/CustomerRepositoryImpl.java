@@ -1,9 +1,9 @@
 package experis.chinookspring.repository;
 
-import experis.chinookspring.Models.Customer;
-import experis.chinookspring.Models.CustomerCountry;
-import experis.chinookspring.Models.CustomerGenre;
-import experis.chinookspring.Models.CustomerSpender;
+import experis.chinookspring.models.Customer;
+import experis.chinookspring.models.CustomerCountry;
+import experis.chinookspring.models.CustomerGenre;
+import experis.chinookspring.models.CustomerSpender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -212,6 +212,8 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             System.out.println(e.getMessage());
         }
     }
+
+
 
     /**
      * Returns the country with the most customers and prints the country and the count.

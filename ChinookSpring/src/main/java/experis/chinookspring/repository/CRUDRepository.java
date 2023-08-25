@@ -20,5 +20,7 @@ public interface CRUDRepository<T,U,S> {
      * @param value this is the new value to replace the older value.
      * */
     void update(U id, S parameter, S value);
+
+
 }
 
