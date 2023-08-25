@@ -1,4 +1,4 @@
-
+Assignment 1 is found the folder called Assignment 1. It have the indidvidual files for each subassignment.
 
 # Chinook
 
